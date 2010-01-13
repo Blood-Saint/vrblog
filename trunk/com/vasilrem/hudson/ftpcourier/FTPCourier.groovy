@@ -8,7 +8,7 @@ def FTP_USER       = ''
 def FTP_PASS       = ''
 def FTP_LOCATION   = ''
 def HUDSON_HOME    = ''
-def PROJECT_NAME   = ''
+def PROJECT_NAME   = '' // Hudson job name. Artifact generatd by this job will be transferred to the FTP
 ///////////////////////////////////////////////////////
 
 putArtifactToFTP(findWARArtefact(HUDSON_HOME + '/jobs/' + PROJECT_NAME + '/builds', []),

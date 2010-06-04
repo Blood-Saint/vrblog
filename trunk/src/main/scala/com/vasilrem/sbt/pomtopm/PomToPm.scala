@@ -46,7 +46,7 @@ object PomToPm extends Application {
     ("" /: pom \\ "dependency") {
       (text: String, dependency: Node) =>
       text + ("\n\tval %s = %s %s %s %s").format(
-        (dependency \ "artifactId" text),
+        (dependency \ "artifactId" text).replaceAll(placeholderTemplate, "").replaceAll("\\.", "_"),
         quotedText(dependency \ "groupId" text),
         dependencyAttribute(dependency \ "artifactId" text),
         dependencyAttribute(dependency \ "version" text),

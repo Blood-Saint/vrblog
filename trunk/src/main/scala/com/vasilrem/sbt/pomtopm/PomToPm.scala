@@ -11,6 +11,8 @@ object PomToPm extends Application {
     case _ => "DefaultProject"
   }
 
+  def escapeInlineResourceName(name: String) = name.replaceAll(placeholderTemplate, "").replaceAll("[\\.\\-]", "_")
+
   def retrievePomProperties(pom: Node) = Map[String, String]() ++
   ((pom \ "properties") flatMap { properties =>
       properties.child map {
@@ -31,7 +33,7 @@ object PomToPm extends Application {
   def repositories(pom: Node) = ("" /: pom \\ "repository") {
     (text: String, repository: Node) =>
     (text + "\n\t" +  """val %s = "%s" at "%s" """)
-    .format((repository \ "id" text) replaceAll("\\.", "_"),
+    .format(escapeInlineResourceName(repository \ "id" text),
             repository \ "id" text,
             repository \ "url" text)
   } 
@@ -46,7 +48,7 @@ object PomToPm extends Application {
     ("" /: pom \\ "dependency") {
       (text: String, dependency: Node) =>
       text + ("\n\tval %s = %s %s %s %s").format(
-        (dependency \ "artifactId" text).replaceAll(placeholderTemplate, "").replaceAll("\\.", "_"),
+        escapeInlineResourceName(dependency \ "artifactId" text),
         quotedText(dependency \ "groupId" text),
         dependencyAttribute(dependency \ "artifactId" text),
         dependencyAttribute(dependency \ "version" text),

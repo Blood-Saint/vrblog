@@ -76,7 +76,7 @@ object PomToPm extends Application {
   override def main(args : Array[java.lang.String]) : Unit = {
     val pom = scala.xml.XML.loadFile(if(args.length > 0) args(0) + "/pom.xml" else "pom.xml")
 
-    println(replacePlaceholders(pmTemplate((pom \ "artifactId" text),
+    println(replacePlaceholders(pmTemplate(escapeInlineResourceName(pom \ "artifactId" text),
                                            sbtProjectType(pom \ "packaging" text),
                                            repositories(pom),
                                            dependencies(pom)),
